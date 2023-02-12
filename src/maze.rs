@@ -98,38 +98,41 @@ impl Maze {
         self.visited.push(start_pos);
     }
 
+    fn handle_neighbor(&mut self, pos: Pos, neighbor: Direction) {
+        let next_pos = match neighbor {
+            Direction::Left(next_pos) => {
+                self.nodes[pos.x][pos.y].left = false;
+                self.nodes[next_pos.x][next_pos.y].right = false;
+                next_pos
+            }
+            Direction::Right(next_pos) => {
+                self.nodes[pos.x][pos.y].right = false;
+                self.nodes[next_pos.x][next_pos.y].left = false;
+                next_pos
+            }
+            Direction::Up(next_pos) => {
+                self.nodes[pos.x][pos.y].up = false;
+                self.nodes[next_pos.x][next_pos.y].down = false;
+                next_pos
+            }
+            Direction::Down(next_pos) => {
+                self.nodes[pos.x][pos.y].down = false;
+                self.nodes[next_pos.x][next_pos.y].up = false;
+                next_pos
+            }
+        };
+
+        self.visited.push(next_pos);
+
+        self.stack.push(pos);
+        self.stack.push(next_pos);
+    }
+
     pub fn generate(&mut self) {
         if let Some(pos) = self.stack.pop() {
             let neighbor = pos.get_neighbor(&self.visited);
-
             if let Some(neighbor) = neighbor {
-                let next_pos = match neighbor {
-                    Direction::Left(next_pos) => {
-                        self.nodes[pos.x][pos.y].left = false;
-                        self.nodes[next_pos.x][next_pos.y].right = false;
-                        next_pos
-                    }
-                    Direction::Right(next_pos) => {
-                        self.nodes[pos.x][pos.y].right = false;
-                        self.nodes[next_pos.x][next_pos.y].left = false;
-                        next_pos
-                    }
-                    Direction::Up(next_pos) => {
-                        self.nodes[pos.x][pos.y].up = false;
-                        self.nodes[next_pos.x][next_pos.y].down = false;
-                        next_pos
-                    }
-                    Direction::Down(next_pos) => {
-                        self.nodes[pos.x][pos.y].down = false;
-                        self.nodes[next_pos.x][next_pos.y].up = false;
-                        next_pos
-                    }
-                };
-
-                self.visited.push(next_pos);
-
-                self.stack.push(pos);
-                self.stack.push(next_pos);
+                self.handle_neighbor(pos, neighbor);
             }
         }
     }
