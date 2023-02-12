@@ -103,40 +103,33 @@ impl Maze {
             let neighbor = pos.get_neighbor(&self.visited);
 
             if let Some(neighbor) = neighbor {
-                match neighbor {
+                let next_pos = match neighbor {
                     Direction::Left(next_pos) => {
                         self.nodes[pos.x][pos.y].left = false;
                         self.nodes[next_pos.x][next_pos.y].right = false;
-                        self.visited.push(next_pos);
-
-                        self.stack.push(pos);
-                        self.stack.push(next_pos);
+                        next_pos
                     }
                     Direction::Right(next_pos) => {
                         self.nodes[pos.x][pos.y].right = false;
                         self.nodes[next_pos.x][next_pos.y].left = false;
-                        self.visited.push(next_pos);
-
-                        self.stack.push(pos);
-                        self.stack.push(next_pos);
+                        next_pos
                     }
                     Direction::Up(next_pos) => {
                         self.nodes[pos.x][pos.y].up = false;
                         self.nodes[next_pos.x][next_pos.y].down = false;
-                        self.visited.push(next_pos);
-
-                        self.stack.push(pos);
-                        self.stack.push(next_pos);
+                        next_pos
                     }
                     Direction::Down(next_pos) => {
                         self.nodes[pos.x][pos.y].down = false;
                         self.nodes[next_pos.x][next_pos.y].up = false;
-                        self.visited.push(next_pos);
-
-                        self.stack.push(pos);
-                        self.stack.push(next_pos);
+                        next_pos
                     }
-                }
+                };
+
+                self.visited.push(next_pos);
+
+                self.stack.push(pos);
+                self.stack.push(next_pos);
             }
         }
     }
