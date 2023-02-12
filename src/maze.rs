@@ -70,6 +70,7 @@ impl Node {
         }
     }
 }
+
 pub struct Maze {
     nodes: Vec<Vec<Node>>,
     visited: Vec<Pos>,
