@@ -6,7 +6,7 @@ use maze::{Maze, Pos};
 use rand::{seq::SliceRandom, thread_rng};
 use raylib::prelude::*;
 
-pub const NODE_SIZE: usize = 10;
+pub const NODE_SIZE: usize = 15;
 pub const NODE_SIZE_I: i32 = NODE_SIZE as i32;
 pub const GRID_WIDTH: usize = 50;
 pub const GRID_HEIGHT: usize = 50;

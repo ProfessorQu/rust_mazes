@@ -74,26 +74,30 @@ impl Node {
 pub struct Maze {
     nodes: Vec<Vec<Node>>,
     visited: Vec<Pos>,
+    stack: Vec<Pos>,
 }
 
 impl Maze {
     pub fn new() -> Self {
         let mut nodes = vec![];
-        let mut visited = vec![];
         for x in 0..GRID_WIDTH {
             nodes.push(vec![]);
             for _y in 0..GRID_HEIGHT {
                 nodes[x].push(Node::new(true, true, true, true));
             }
         }
-        Self { nodes, visited }
+        Self {
+            nodes,
+            visited: vec![],
+            stack: vec![]
+        }
     }
 
     pub fn generate(&mut self, start_pos: Pos) {
-        let mut stack = vec![start_pos];
+        self.stack.push(start_pos);
         self.visited.push(start_pos);
 
-        while let Some(pos) = stack.pop() {
+        while let Some(pos) = self.stack.pop() {
             let neigbors = pos.get_neigbors(&self.visited);
 
             if !neigbors.is_empty() {
@@ -103,32 +107,32 @@ impl Maze {
                         self.nodes[next_pos.x][next_pos.y].right = false;
                         self.visited.push(next_pos);
 
-                        stack.push(pos);
-                        stack.push(next_pos);
+                        self.stack.push(pos);
+                        self.stack.push(next_pos);
                     }
                     Direction::Right(next_pos) => {
                         self.nodes[pos.x][pos.y].right = false;
                         self.nodes[next_pos.x][next_pos.y].left = false;
                         self.visited.push(next_pos);
 
-                        stack.push(pos);
-                        stack.push(next_pos);
+                        self.stack.push(pos);
+                        self.stack.push(next_pos);
                     }
                     Direction::Up(next_pos) => {
                         self.nodes[pos.x][pos.y].up = false;
                         self.nodes[next_pos.x][next_pos.y].down = false;
                         self.visited.push(next_pos);
 
-                        stack.push(pos);
-                        stack.push(next_pos);
+                        self.stack.push(pos);
+                        self.stack.push(next_pos);
                     }
                     Direction::Down(next_pos) => {
                         self.nodes[pos.x][pos.y].down = false;
                         self.nodes[next_pos.x][next_pos.y].up = false;
                         self.visited.push(next_pos);
 
-                        stack.push(pos);
-                        stack.push(next_pos);
+                        self.stack.push(pos);
+                        self.stack.push(next_pos);
                     }
                 }
             }
