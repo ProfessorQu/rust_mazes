@@ -1,12 +1,12 @@
-// #![allow(unused)]
+#![allow(unused)]
 
 use rand::{seq::SliceRandom, thread_rng};
 use raylib::prelude::*;
 
-pub const NODE_SIZE: usize = 40;
+pub const NODE_SIZE: usize = 10;
 pub const NODE_SIZE_I: i32 = NODE_SIZE as i32;
-pub const GRID_WIDTH: usize = 20;
-pub const GRID_HEIGHT: usize = 20;
+pub const GRID_WIDTH: usize = 50;
+pub const GRID_HEIGHT: usize = 50;
 
 enum Direction {
     Up,
@@ -121,10 +121,10 @@ fn draw(d: &mut RaylibDrawHandle, nodes: &[Vec<Node>]) {
             let x = x as i32 * NODE_SIZE_I;
             let y = y as i32 * NODE_SIZE_I;
             if node.up {
-                d.draw_line(x, y, x + NODE_SIZE_I, y, Color::GREEN);
+                d.draw_line(x, y, x + NODE_SIZE_I, y, Color::BLACK);
             }
             if node.left {
-                d.draw_line(x, y, x, y + NODE_SIZE_I, Color::BLUE);
+                d.draw_line(x, y, x, y + NODE_SIZE_I, Color::BLACK);
             }
         }
     }
