@@ -9,10 +9,10 @@ pub const GRID_WIDTH: usize = 50;
 pub const GRID_HEIGHT: usize = 50;
 
 enum Direction {
-    Up,
-    Down,
-    Left,
-    Right,
+    Up(Pos),
+    Down(Pos),
+    Left(Pos),
+    Right(Pos),
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -48,16 +48,16 @@ impl Node {
 fn get_neigbors(pos: Pos) -> Vec<Direction> {
     let mut neigbors = vec![];
     if pos.x > 0 {
-        neigbors.push(Direction::Left);
+        neigbors.push(Direction::Left(Pos::new(pos.x - 1, pos.y)));
     }
     if pos.x < GRID_WIDTH - 1 {
-        neigbors.push(Direction::Right);
+        neigbors.push(Direction::Right(Pos::new(pos.x + 1, pos.y)));
     }
     if pos.y > 0 {
-        neigbors.push(Direction::Up);
+        neigbors.push(Direction::Up(Pos::new(pos.x, pos.y - 1)));
     }
     if pos.y < GRID_HEIGHT - 1 {
-        neigbors.push(Direction::Down);
+        neigbors.push(Direction::Down(Pos::new(pos.x, pos.y + 1)));
     }
 
     neigbors.shuffle(&mut thread_rng());
@@ -68,8 +68,7 @@ fn get_neigbors(pos: Pos) -> Vec<Direction> {
 fn generate_maze(pos: Pos, nodes: &mut Vec<Vec<Node>>, visited: &mut Vec<Pos>) {
     for neigbor in get_neigbors(pos) {
         match neigbor {
-            Direction::Left => {
-                let next_pos = Pos::new(pos.x - 1, pos.y);
+            Direction::Left(next_pos) => {
                 if !visited.contains(&next_pos) {
                     nodes[pos.x][pos.y].left = false;
                     nodes[next_pos.x][next_pos.y].right = false;
@@ -78,8 +77,7 @@ fn generate_maze(pos: Pos, nodes: &mut Vec<Vec<Node>>, visited: &mut Vec<Pos>) {
                     generate_maze(next_pos, nodes, visited);
                 }
             }
-            Direction::Right => {
-                let next_pos = Pos::new(pos.x + 1, pos.y);
+            Direction::Right(next_pos) => {
                 if !visited.contains(&next_pos) {
                     nodes[pos.x][pos.y].right = false;
                     nodes[next_pos.x][next_pos.y].left = false;
@@ -88,8 +86,7 @@ fn generate_maze(pos: Pos, nodes: &mut Vec<Vec<Node>>, visited: &mut Vec<Pos>) {
                     generate_maze(next_pos, nodes, visited);
                 }
             }
-            Direction::Up => {
-                let next_pos = Pos::new(pos.x, pos.y - 1);
+            Direction::Up(next_pos) => {
                 if !visited.contains(&next_pos) {
                     nodes[pos.x][pos.y].up = false;
                     nodes[next_pos.x][next_pos.y].down = false;
@@ -98,8 +95,7 @@ fn generate_maze(pos: Pos, nodes: &mut Vec<Vec<Node>>, visited: &mut Vec<Pos>) {
                     generate_maze(next_pos, nodes, visited);
                 }
             }
-            Direction::Down => {
-                let next_pos = Pos::new(pos.x, pos.y + 1);
+            Direction::Down(next_pos) => {
                 if !visited.contains(&next_pos) {
                     nodes[pos.x][pos.y].down = false;
                     nodes[next_pos.x][next_pos.y].up = false;
