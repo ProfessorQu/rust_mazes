@@ -1,8 +1,9 @@
 use rand::{seq::SliceRandom, thread_rng};
 use raylib::prelude::*;
 
-use crate::{NODE_SIZE_I, GRID_WIDTH, GRID_HEIGHT};
+use crate::{GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
 
+#[derive(Clone, Copy)]
 enum Direction {
     Up(Pos),
     Down(Pos),
@@ -21,36 +22,34 @@ impl Pos {
         Self { x, y }
     }
 
-    fn get_neigbors(&self, visited: &[Pos]) -> Vec<Direction> {
-        let mut neigbors = vec![];
+    fn get_neighbor(&self, visited: &[Pos]) -> Option<Direction> {
+        let mut neighbors = vec![];
         if self.x > 0 {
             let new_pos = Pos::new(self.x - 1, self.y);
             if !visited.contains(&new_pos) {
-                neigbors.push(Direction::Left(new_pos));
+                neighbors.push(Direction::Left(new_pos));
             }
         }
         if self.x < GRID_WIDTH - 1 {
             let new_pos = Pos::new(self.x + 1, self.y);
             if !visited.contains(&new_pos) {
-                neigbors.push(Direction::Right(new_pos));
+                neighbors.push(Direction::Right(new_pos));
             }
         }
         if self.y > 0 {
             let new_pos = Pos::new(self.x, self.y - 1);
             if !visited.contains(&new_pos) {
-                neigbors.push(Direction::Up(new_pos));
+                neighbors.push(Direction::Up(new_pos));
             }
         }
         if self.y < GRID_HEIGHT - 1 {
             let new_pos = Pos::new(self.x, self.y + 1);
             if !visited.contains(&new_pos) {
-                neigbors.push(Direction::Down(new_pos));
+                neighbors.push(Direction::Down(new_pos));
             }
         }
 
-        neigbors.shuffle(&mut thread_rng());
-
-        neigbors
+        neighbors.choose(&mut thread_rng()).copied()
     }
 }
 
@@ -89,19 +88,21 @@ impl Maze {
         Self {
             nodes,
             visited: vec![],
-            stack: vec![]
+            stack: vec![],
         }
     }
 
-    pub fn generate(&mut self, start_pos: Pos) {
+    pub fn init(&mut self, start_pos: Pos) {
         self.stack.push(start_pos);
         self.visited.push(start_pos);
+    }
 
-        while let Some(pos) = self.stack.pop() {
-            let neigbors = pos.get_neigbors(&self.visited);
+    pub fn generate(&mut self) {
+        if let Some(pos) = self.stack.pop() {
+            let neighbor = pos.get_neighbor(&self.visited);
 
-            if !neigbors.is_empty() {
-                match neigbors[0] {
+            if let Some(neighbor) = neighbor {
+                match neighbor {
                     Direction::Left(next_pos) => {
                         self.nodes[pos.x][pos.y].left = false;
                         self.nodes[next_pos.x][next_pos.y].right = false;
@@ -140,20 +141,31 @@ impl Maze {
     }
 
     pub fn draw(&self, d: &mut RaylibDrawHandle) {
-        d.clear_background(Color::WHITE);
+        d.clear_background(Color::BLACK);
 
         for (x, row) in self.nodes.iter().enumerate() {
             for y in 0..row.len() {
                 let node = &self.nodes[x][y];
+                let pos = Pos::new(x, y);
                 let x = x as i32 * NODE_SIZE_I;
                 let y = y as i32 * NODE_SIZE_I;
-                if node.up {
-                    d.draw_line(x, y, x + NODE_SIZE_I, y, Color::BLACK);
-                }
-                if node.left {
-                    d.draw_line(x, y, x, y + NODE_SIZE_I, Color::BLACK);
+                if self.visited.contains(&pos) {
+                    d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
+                    if node.up {
+                        d.draw_line(x, y, x + NODE_SIZE_I, y, Color::BLACK);
+                    }
+                    if node.left {
+                        d.draw_line(x, y, x, y + NODE_SIZE_I, Color::BLACK);
+                    }
                 }
             }
+        }
+
+        if let Some(pos) = self.stack.last() {
+            let x = pos.x as i32 * NODE_SIZE_I;
+            let y = pos.y as i32 * NODE_SIZE_I;
+
+            d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::RED);
         }
     }
 }
