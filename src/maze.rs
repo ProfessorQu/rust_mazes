@@ -1,9 +1,11 @@
+use std::collections::HashSet;
+
 use rand::{seq::SliceRandom, thread_rng};
 use raylib::prelude::*;
 
 use crate::{GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 enum Direction {
     Up(Pos),
     Down(Pos),
@@ -11,7 +13,7 @@ enum Direction {
     Right(Pos),
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Pos {
     x: usize,
     y: usize,
@@ -22,7 +24,7 @@ impl Pos {
         Self { x, y }
     }
 
-    fn get_neighbor(&self, visited: &[Pos]) -> Option<Direction> {
+    fn get_neighbor(&self, visited: &HashSet<Pos>) -> Option<Direction> {
         let mut neighbors = vec![];
         if self.x > 0 {
             let new_pos = Pos::new(self.x - 1, self.y);
@@ -73,7 +75,7 @@ impl Node {
 
 pub struct Maze {
     nodes: Vec<Vec<Node>>,
-    visited: Vec<Pos>,
+    visited: HashSet<Pos>,
     stack: Vec<Pos>,
 }
 
@@ -88,14 +90,14 @@ impl Maze {
         }
         Self {
             nodes,
-            visited: vec![],
+            visited: HashSet::new(),
             stack: vec![],
         }
     }
 
     pub fn init(&mut self, start_pos: Pos) {
         self.stack.push(start_pos);
-        self.visited.push(start_pos);
+        self.visited.insert(start_pos);
     }
 
     fn handle_neighbor(&mut self, pos: Pos, neighbor: Direction) {
@@ -122,7 +124,7 @@ impl Maze {
             }
         };
 
-        self.visited.push(next_pos);
+        self.visited.insert(next_pos);
 
         self.stack.push(pos);
         self.stack.push(next_pos);
