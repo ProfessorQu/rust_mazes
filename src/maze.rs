@@ -4,6 +4,7 @@ use raylib::prelude::*;
 
 use crate::{helpers::*, GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
 
+#[derive(Clone)]
 pub struct Maze {
     nodes: Vec<Vec<Node>>,
     visited: HashSet<Pos>,
@@ -12,15 +13,8 @@ pub struct Maze {
 
 impl Maze {
     pub fn new() -> Self {
-        let mut nodes = vec![];
-        for x in 0..GRID_WIDTH {
-            nodes.push(vec![]);
-            for _y in 0..GRID_HEIGHT {
-                nodes[x].push(Node::new());
-            }
-        }
         Self {
-            nodes,
+            nodes: vec![],
             visited: HashSet::new(),
             stack: vec![],
         }
@@ -30,13 +24,7 @@ impl Maze {
         self.stack.is_empty()
     }
 
-    pub fn init(&mut self, start_x: usize, start_y: usize) {
-        let start_pos = Pos::new(start_x, start_y);
-        self.stack.push(start_pos);
-        self.visited.insert(start_pos);
-    }
-
-    pub fn reset(&mut self) {
+    pub fn reset(&mut self, start_pos: Pos) {
         self.nodes = vec![];
         for x in 0..GRID_WIDTH {
             self.nodes.push(vec![]);
@@ -47,6 +35,9 @@ impl Maze {
 
         self.stack = vec![];
         self.visited = HashSet::new();
+
+        self.stack.push(start_pos);
+        self.visited.insert(start_pos);
     }
 
     fn handle_neighbor(&mut self, pos: Pos, neighbor: Direction) {
@@ -81,7 +72,7 @@ impl Maze {
 
     pub fn generate(&mut self) {
         if let Some(pos) = self.stack.pop() {
-            let neighbor = pos.get_neighbor(&self.visited);
+            let neighbor = pos.get_random_neighbor(&self.visited);
             if let Some(neighbor) = neighbor {
                 self.handle_neighbor(pos, neighbor);
             }

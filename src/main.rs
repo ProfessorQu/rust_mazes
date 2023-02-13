@@ -3,24 +3,28 @@
 
 mod helpers;
 mod maze;
+mod solver;
 
-use std::{time::Duration, thread};
+use std::{thread, time::Duration};
 
+use helpers::Pos;
 use maze::Maze;
 use rand::{thread_rng, Rng};
+use solver::Solver;
 
-pub const NODE_SIZE: usize = 10;
+pub const NODE_SIZE: usize = 20;
 pub const NODE_SIZE_I: i32 = NODE_SIZE as i32;
-pub const GRID_WIDTH: usize = 192;
-pub const GRID_HEIGHT: usize = 102;
+pub const GRID_WIDTH: usize = 30;
+pub const GRID_HEIGHT: usize = 30;
 
 fn main() {
     let mut maze = Maze::new();
 
     let start_x = thread_rng().gen_range(0..GRID_WIDTH);
     let start_y = thread_rng().gen_range(0..GRID_HEIGHT);
+    let start_pos = Pos::new(start_x, start_y);
 
-    maze.init(start_x, start_y);
+    maze.reset(start_pos);
 
     let (mut rl, thread) = raylib::init()
         .size(
@@ -30,15 +34,23 @@ fn main() {
         .title("Maze")
         .build();
 
+    // let mut solver = Solver::new(
+    //     Maze::new(),
+    //     Pos::new(0, 0),
+    //     Pos::new(GRID_WIDTH - 1, GRID_HEIGHT - 1),
+    // );
+
+    // let mut solving = false;
+
     while !rl.window_should_close() {
         if maze.complete() {
             thread::sleep(Duration::from_secs(2));
 
             let start_x = thread_rng().gen_range(0..GRID_WIDTH);
             let start_y = thread_rng().gen_range(0..GRID_HEIGHT);
+            let start_pos = Pos::new(start_x, start_y);
 
-            maze.reset();
-            maze.init(start_x, start_y);
+            maze.reset(start_pos);
         }
 
         let mut d = rl.begin_drawing(&thread);
@@ -46,8 +58,8 @@ fn main() {
         for _ in 0..10 {
             maze.generate();
         }
-        
-        maze.draw(&mut d);
 
+        maze.draw(&mut d);
+        // solver.draw(&mut d);
     }
 }
