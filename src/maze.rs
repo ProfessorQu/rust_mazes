@@ -1,77 +1,8 @@
 use std::collections::HashSet;
 
-use rand::{seq::SliceRandom, thread_rng};
 use raylib::prelude::*;
 
-use crate::{GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
-
-#[derive(Clone, Copy, Debug)]
-enum Direction {
-    Up(Pos),
-    Down(Pos),
-    Left(Pos),
-    Right(Pos),
-}
-
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct Pos {
-    x: usize,
-    y: usize,
-}
-
-impl Pos {
-    pub fn new(x: usize, y: usize) -> Self {
-        Self { x, y }
-    }
-
-    fn get_neighbor(&self, visited: &HashSet<Pos>) -> Option<Direction> {
-        let mut neighbors = vec![];
-        if self.x > 0 {
-            let new_pos = Pos::new(self.x - 1, self.y);
-            if !visited.contains(&new_pos) {
-                neighbors.push(Direction::Left(new_pos));
-            }
-        }
-        if self.x < GRID_WIDTH - 1 {
-            let new_pos = Pos::new(self.x + 1, self.y);
-            if !visited.contains(&new_pos) {
-                neighbors.push(Direction::Right(new_pos));
-            }
-        }
-        if self.y > 0 {
-            let new_pos = Pos::new(self.x, self.y - 1);
-            if !visited.contains(&new_pos) {
-                neighbors.push(Direction::Up(new_pos));
-            }
-        }
-        if self.y < GRID_HEIGHT - 1 {
-            let new_pos = Pos::new(self.x, self.y + 1);
-            if !visited.contains(&new_pos) {
-                neighbors.push(Direction::Down(new_pos));
-            }
-        }
-
-        neighbors.choose(&mut thread_rng()).copied()
-    }
-}
-
-struct Node {
-    up: bool,
-    down: bool,
-    left: bool,
-    right: bool,
-}
-
-impl Node {
-    fn new(up: bool, down: bool, left: bool, right: bool) -> Self {
-        Self {
-            up,
-            down,
-            left,
-            right,
-        }
-    }
-}
+use crate::{helpers::*, GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
 
 pub struct Maze {
     nodes: Vec<Vec<Node>>,
@@ -85,7 +16,7 @@ impl Maze {
         for x in 0..GRID_WIDTH {
             nodes.push(vec![]);
             for _y in 0..GRID_HEIGHT {
-                nodes[x].push(Node::new(true, true, true, true));
+                nodes[x].push(Node::new());
             }
         }
         Self {
@@ -95,7 +26,12 @@ impl Maze {
         }
     }
 
-    pub fn init(&mut self, start_pos: Pos) {
+    pub fn complete(&self) -> bool {
+        self.stack.is_empty()
+    }
+
+    pub fn init(&mut self, start_x: usize, start_y: usize) {
+        let start_pos = Pos::new(start_x, start_y);
         self.stack.push(start_pos);
         self.visited.insert(start_pos);
     }
@@ -146,10 +82,16 @@ impl Maze {
             for y in 0..row.len() {
                 let node = &self.nodes[x][y];
                 let pos = Pos::new(x, y);
+
                 let x = x as i32 * NODE_SIZE_I;
                 let y = y as i32 * NODE_SIZE_I;
+
                 if self.visited.contains(&pos) {
-                    d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
+                    if self.stack.contains(&pos) {
+                        d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::GREEN);
+                    } else {
+                        d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
+                    }
                     if node.up {
                         d.draw_line(x, y, x + NODE_SIZE_I, y, Color::BLACK);
                     }
