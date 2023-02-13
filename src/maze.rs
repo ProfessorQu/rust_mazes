@@ -36,6 +36,19 @@ impl Maze {
         self.visited.insert(start_pos);
     }
 
+    pub fn reset(&mut self) {
+        self.nodes = vec![];
+        for x in 0..GRID_WIDTH {
+            self.nodes.push(vec![]);
+            for _y in 0..GRID_HEIGHT {
+                self.nodes[x].push(Node::new());
+            }
+        }
+
+        self.stack = vec![];
+        self.visited = HashSet::new();
+    }
+
     fn handle_neighbor(&mut self, pos: Pos, neighbor: Direction) {
         let next_pos = match neighbor {
             Direction::Left(next_pos) => {
