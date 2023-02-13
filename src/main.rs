@@ -10,10 +10,10 @@ use helpers::Pos;
 use maze::Maze;
 use rand::{thread_rng, Rng};
 
-pub const NODE_SIZE: usize = 20;
+pub const NODE_SIZE: usize = 10;
 pub const NODE_SIZE_I: i32 = NODE_SIZE as i32;
-pub const GRID_WIDTH: usize = 30;
-pub const GRID_HEIGHT: usize = 30;
+pub const GRID_WIDTH: usize = 192;
+pub const GRID_HEIGHT: usize = 102;
 
 fn main() {
     let mut maze = Maze::new();
