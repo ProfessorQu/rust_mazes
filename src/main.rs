@@ -3,14 +3,12 @@
 
 mod helpers;
 mod maze;
-mod solver;
 
 use std::{thread, time::Duration};
 
 use helpers::Pos;
 use maze::Maze;
 use rand::{thread_rng, Rng};
-use solver::Solver;
 
 pub const NODE_SIZE: usize = 20;
 pub const NODE_SIZE_I: i32 = NODE_SIZE as i32;
@@ -34,14 +32,6 @@ fn main() {
         .title("Maze")
         .build();
 
-    // let mut solver = Solver::new(
-    //     Maze::new(),
-    //     Pos::new(0, 0),
-    //     Pos::new(GRID_WIDTH - 1, GRID_HEIGHT - 1),
-    // );
-
-    // let mut solving = false;
-
     while !rl.window_should_close() {
         if maze.complete() {
             thread::sleep(Duration::from_secs(2));
@@ -60,6 +50,5 @@ fn main() {
         }
 
         maze.draw(&mut d);
-        // solver.draw(&mut d);
     }
 }
