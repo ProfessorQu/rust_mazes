@@ -1,11 +1,11 @@
 #![allow(unused)]
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 mod helpers;
 mod maze;
 mod mazes;
 
-use std::{thread, time::Duration};
+use std::{thread, time::{Duration, Instant}};
 
 use maze::Maze;
 use mazes::{BinaryTree, DepthFirstSearch};
@@ -37,14 +37,19 @@ fn main() {
         .title("Maze")
         .build();
 
+    let mut now = Instant::now();
+
     while !rl.window_should_close() {
         match current {
             Algorithm::DepthFirstSearch => {
                 if depth.complete() {
+                    println!("Depth first search took: {:?}", now.elapsed());
+
                     thread::sleep(Duration::from_secs(2));
                     depth.reset();
 
                     current = Algorithm::BinaryTree;
+                    now = Instant::now();
                 }
 
                 let mut d = rl.begin_drawing(&thread);
@@ -57,15 +62,18 @@ fn main() {
             }
             Algorithm::BinaryTree => {
                 if binary.complete() {
+                    println!("Binary tree took: {:?}", now.elapsed());
+
                     thread::sleep(Duration::from_secs(2));
                     binary.reset();
 
                     current = Algorithm::DepthFirstSearch;
+                    now = Instant::now();
                 }
 
                 let mut d = rl.begin_drawing(&thread);
 
-                for _ in 0..20 {
+                for _ in 0..10 {
                     binary.generate();
                 }
 
