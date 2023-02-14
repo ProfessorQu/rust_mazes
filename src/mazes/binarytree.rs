@@ -61,9 +61,9 @@ impl Maze for BinaryTree {
     fn draw(&self, d: &mut RaylibDrawHandle) {
         d.clear_background(Color::BLACK);
 
-        for (x, row) in self.nodes.iter().enumerate() {
-            for y in 0..row.len() {
-                if y > self.current_pos.y {
+        'nodes: for x in 0..GRID_WIDTH {
+            for y in 0..GRID_HEIGHT {
+                if (y > self.current_pos.y) || (y == self.current_pos.y && x > self.current_pos.x) {
                     break;
                 }
 
