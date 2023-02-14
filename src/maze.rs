@@ -105,12 +105,5 @@ impl Maze {
                 }
             }
         }
-
-        if let Some(pos) = self.stack.last() {
-            let x = pos.x as i32 * NODE_SIZE_I;
-            let y = pos.y as i32 * NODE_SIZE_I;
-
-            d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::RED);
-        }
     }
 }

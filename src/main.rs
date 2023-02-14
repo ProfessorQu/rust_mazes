@@ -45,7 +45,7 @@ fn main() {
 
         let mut d = rl.begin_drawing(&thread);
 
-        for _ in 0..10 {
+        for _ in 0..20 {
             maze.generate();
         }
 
