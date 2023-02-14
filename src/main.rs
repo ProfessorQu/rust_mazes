@@ -3,26 +3,31 @@
 
 mod helpers;
 mod maze;
+mod mazes;
 
 use std::{thread, time::Duration};
 
-use helpers::Pos;
 use maze::Maze;
-use rand::{thread_rng, Rng};
+use mazes::{BinaryTree, DepthFirstSearch};
 
 pub const NODE_SIZE: usize = 10;
 pub const NODE_SIZE_I: i32 = NODE_SIZE as i32;
 pub const GRID_WIDTH: usize = 192;
 pub const GRID_HEIGHT: usize = 102;
 
+enum Algorithm {
+    DepthFirstSearch,
+    BinaryTree,
+}
+
 fn main() {
-    let mut maze = Maze::new();
+    let mut depth = DepthFirstSearch::new();
+    let mut binary = BinaryTree::new();
 
-    let start_x = thread_rng().gen_range(0..GRID_WIDTH);
-    let start_y = thread_rng().gen_range(0..GRID_HEIGHT);
-    let start_pos = Pos::new(start_x, start_y);
+    depth.reset();
+    binary.reset();
 
-    maze.reset(start_pos);
+    let mut current = Algorithm::DepthFirstSearch;
 
     let (mut rl, thread) = raylib::init()
         .size(
@@ -33,22 +38,39 @@ fn main() {
         .build();
 
     while !rl.window_should_close() {
-        if maze.complete() {
-            thread::sleep(Duration::from_secs(2));
+        match current {
+            Algorithm::DepthFirstSearch => {
+                if depth.complete() {
+                    thread::sleep(Duration::from_secs(2));
+                    depth.reset();
 
-            let start_x = thread_rng().gen_range(0..GRID_WIDTH);
-            let start_y = thread_rng().gen_range(0..GRID_HEIGHT);
-            let start_pos = Pos::new(start_x, start_y);
+                    current = Algorithm::BinaryTree;
+                }
 
-            maze.reset(start_pos);
+                let mut d = rl.begin_drawing(&thread);
+
+                for _ in 0..20 {
+                    depth.generate();
+                }
+
+                depth.draw(&mut d);
+            }
+            Algorithm::BinaryTree => {
+                if binary.complete() {
+                    thread::sleep(Duration::from_secs(2));
+                    binary.reset();
+
+                    current = Algorithm::DepthFirstSearch;
+                }
+
+                let mut d = rl.begin_drawing(&thread);
+
+                for _ in 0..20 {
+                    binary.generate();
+                }
+
+                binary.draw(&mut d);
+            }
         }
-
-        let mut d = rl.begin_drawing(&thread);
-
-        for _ in 0..20 {
-            maze.generate();
-        }
-
-        maze.draw(&mut d);
     }
 }
