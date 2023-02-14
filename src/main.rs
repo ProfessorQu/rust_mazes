@@ -54,7 +54,7 @@ fn main() {
 
                 let mut d = rl.begin_drawing(&thread);
 
-                for _ in 0..20 {
+                for _ in 0..50 {
                     depth.generate();
                 }
 
@@ -73,7 +73,7 @@ fn main() {
 
                 let mut d = rl.begin_drawing(&thread);
 
-                for _ in 0..10 {
+                for _ in 0..30 {
                     binary.generate();
                 }
 
