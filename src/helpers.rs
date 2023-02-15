@@ -52,35 +52,6 @@ impl Pos {
 
         neighbors.choose(&mut thread_rng()).copied()
     }
-
-    pub fn get_neighbor(&self, visited: &HashSet<Pos>) -> Option<Direction> {
-        if self.x > 0 {
-            let new_pos = Pos::new(self.x - 1, self.y);
-            if !visited.contains(&new_pos) {
-                return Some(Direction::Left(new_pos));
-            }
-        }
-        if self.x < GRID_WIDTH - 1 {
-            let new_pos = Pos::new(self.x + 1, self.y);
-            if !visited.contains(&new_pos) {
-                return Some(Direction::Right(new_pos));
-            }
-        }
-        if self.y > 0 {
-            let new_pos = Pos::new(self.x, self.y - 1);
-            if !visited.contains(&new_pos) {
-                return Some(Direction::Up(new_pos));
-            }
-        }
-        if self.y < GRID_HEIGHT - 1 {
-            let new_pos = Pos::new(self.x, self.y + 1);
-            if !visited.contains(&new_pos) {
-                return Some(Direction::Down(new_pos));
-            }
-        }
-
-        None
-    }
 }
 
 #[derive(Clone, Copy, Debug)]
