@@ -114,7 +114,9 @@ impl Maze for HuntAndKill {
                 let y = y as i32 * NODE_SIZE_I;
 
                 if self.visited.contains(&pos) {
-                    if self.hunting_pos.y < pos.y {
+                    if pos.y > self.hunting_pos.y
+                        || (pos.y == self.hunting_pos.y && pos.x > self.hunting_pos.x)
+                    {
                         d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::GOLD);
                     } else {
                         d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
