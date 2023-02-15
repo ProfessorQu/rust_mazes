@@ -69,15 +69,31 @@ impl Maze for BinaryTree {
 
                 let node = &self.nodes[x][y];
 
-                let x = x as i32 * NODE_SIZE_I;
-                let y = y as i32 * NODE_SIZE_I;
+                let screen_x = x as i32 * NODE_SIZE_I;
+                let screen_y = y as i32 * NODE_SIZE_I;
 
-                d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
+                if y == self.current_pos.y {
+                    d.draw_rectangle(screen_x, screen_y, NODE_SIZE_I, NODE_SIZE_I, Color::BLUE);
+                } else {
+                    d.draw_rectangle(screen_x, screen_y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
+                }
                 if node.up {
-                    d.draw_line(x, y, x + NODE_SIZE_I, y, Color::BLACK);
+                    d.draw_line(
+                        screen_x,
+                        screen_y,
+                        screen_x + NODE_SIZE_I,
+                        screen_y,
+                        Color::BLACK,
+                    );
                 }
                 if node.left {
-                    d.draw_line(x, y, x, y + NODE_SIZE_I, Color::BLACK);
+                    d.draw_line(
+                        screen_x,
+                        screen_y,
+                        screen_x,
+                        screen_y + NODE_SIZE_I,
+                        Color::BLACK,
+                    );
                 }
             }
         }

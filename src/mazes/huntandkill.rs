@@ -110,43 +110,25 @@ impl Maze for HuntAndKill {
                 let node = &self.nodes[x][y];
                 let pos = Pos::new(x, y);
 
-                let x = x as i32 * NODE_SIZE_I;
-                let y = y as i32 * NODE_SIZE_I;
+                let screen_x = x as i32 * NODE_SIZE_I;
+                let screen_y = y as i32 * NODE_SIZE_I;
 
                 if self.visited.contains(&pos) {
                     if pos.y > self.hunting_pos.y
                         || (pos.y == self.hunting_pos.y && pos.x > self.hunting_pos.x)
                     {
-                        d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::GOLD);
+                        d.draw_rectangle(screen_x, screen_y, NODE_SIZE_I, NODE_SIZE_I, Color::GOLD);
                     } else {
-                        d.draw_rectangle(x, y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
+                        d.draw_rectangle(screen_x, screen_y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
                     }
                     if node.up {
-                        d.draw_line(x, y, x + NODE_SIZE_I, y, Color::BLACK);
+                        d.draw_line(screen_x, screen_y, screen_x + NODE_SIZE_I, screen_y, Color::BLACK);
                     }
                     if node.left {
-                        d.draw_line(x, y, x, y + NODE_SIZE_I, Color::BLACK);
+                        d.draw_line(screen_x, screen_y, screen_x, screen_y + NODE_SIZE_I, Color::BLACK);
                     }
                 }
             }
-        }
-
-        if self.hunting {
-            d.draw_rectangle(
-                self.hunting_pos.x as i32 * NODE_SIZE_I,
-                self.hunting_pos.y as i32 * NODE_SIZE_I,
-                NODE_SIZE_I,
-                NODE_SIZE_I,
-                Color::PINK,
-            );
-        } else {
-            d.draw_rectangle(
-                self.killing_pos.x as i32 * NODE_SIZE_I,
-                self.killing_pos.y as i32 * NODE_SIZE_I,
-                NODE_SIZE_I,
-                NODE_SIZE_I,
-                Color::PINK,
-            );
         }
     }
 }
