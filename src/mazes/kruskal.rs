@@ -5,7 +5,7 @@ use raylib::prelude::*;
 
 use crate::{helpers::*, maze::Maze, GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
 
-const LAST_POSSES_LEN: usize = 50;
+const LAST_POSSES_LEN: usize = 1100;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Node {

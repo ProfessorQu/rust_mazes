@@ -69,7 +69,7 @@ fn main() {
             Algorithm::BinaryTree => binary.update(&mut now, &mut current, &mut rl, &thread, 25),
             Algorithm::HuntAndKill => hunt.update(&mut now, &mut current, &mut rl, &thread, 50),
             Algorithm::Prim => prim.update(&mut now, &mut current, &mut rl, &thread, 30),
-            Algorithm::Kruskal => kruskal.update(&mut now, &mut current, &mut rl, &thread, 100),
+            Algorithm::Kruskal => kruskal.update(&mut now, &mut current, &mut rl, &thread, 120),
         }
     }
 }
