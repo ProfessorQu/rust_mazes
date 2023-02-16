@@ -6,13 +6,13 @@ use raylib::prelude::*;
 use crate::{helpers::*, maze::Maze, GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
 
 #[derive(Clone)]
-pub struct RandomizedPrim {
+pub struct Prim {
     nodes: Vec<Vec<Node>>,
     visited: HashSet<Pos>,
     edges: HashSet<Pos>,
 }
 
-impl RandomizedPrim {
+impl Prim {
     fn handle_neighbor(&mut self, pos: Pos, neighbor: Direction) {
         let next_pos = match neighbor {
             Direction::Left(next_pos) => {
@@ -48,7 +48,7 @@ impl RandomizedPrim {
     }
 }
 
-impl Maze for RandomizedPrim {
+impl Maze for Prim {
     fn new() -> Self {
         Self {
             nodes: vec![],

@@ -20,7 +20,7 @@ pub enum Algorithm {
     DepthFirstSearch,
     BinaryTree,
     HuntAndKill,
-    RandomizedPrim,
+    Prim,
 }
 
 impl Algorithm {
@@ -28,8 +28,8 @@ impl Algorithm {
         match self {
             Algorithm::DepthFirstSearch => Algorithm::BinaryTree,
             Algorithm::BinaryTree => Algorithm::HuntAndKill,
-            Algorithm::HuntAndKill => Algorithm::RandomizedPrim,
-            Algorithm::RandomizedPrim => Algorithm::DepthFirstSearch,
+            Algorithm::HuntAndKill => Algorithm::Prim,
+            Algorithm::Prim => Algorithm::DepthFirstSearch,
         }
     }
 }
@@ -38,14 +38,14 @@ fn main() {
     let mut depth = DepthFirstSearch::new();
     let mut binary = BinaryTree::new();
     let mut hunt = HuntAndKill::new();
-    let mut prim = RandomizedPrim::new();
+    let mut prim = Prim::new();
 
     depth.reset();
     binary.reset();
     hunt.reset();
     prim.reset();
 
-    let mut current = Algorithm::RandomizedPrim;
+    let mut current = Algorithm::Prim;
 
     let (mut rl, thread) = raylib::init()
         .size(
@@ -68,7 +68,7 @@ fn main() {
             Algorithm::HuntAndKill => {
                 hunt.update(&mut now, &mut current, &mut rl, &thread, 50);
             }
-            Algorithm::RandomizedPrim => {
+            Algorithm::Prim => {
                 prim.update(&mut now, &mut current, &mut rl, &thread, 30);
             }
         }

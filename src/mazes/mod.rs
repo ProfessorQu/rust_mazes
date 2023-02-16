@@ -1,9 +1,9 @@
 mod binarytree;
 mod depthfirstsearch;
 mod huntandkill;
-mod randomizedprim;
+mod prim;
 
 pub use binarytree::BinaryTree;
 pub use depthfirstsearch::DepthFirstSearch;
 pub use huntandkill::HuntAndKill;
-pub use randomizedprim::RandomizedPrim;
+pub use prim::Prim;
