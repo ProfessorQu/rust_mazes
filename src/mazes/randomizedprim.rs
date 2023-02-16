@@ -58,7 +58,7 @@ impl Maze for RandomizedPrim {
     }
 
     fn complete(&self) -> bool {
-        self.visited.len() == GRID_WIDTH * GRID_HEIGHT
+        self.visited.len() == GRID_WIDTH * GRID_HEIGHT && self.edges.is_empty()
     }
 
     fn reset(&mut self) {
