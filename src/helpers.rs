@@ -12,6 +12,17 @@ pub enum Direction {
     Right(Pos),
 }
 
+impl Direction {
+    pub fn get_pos(&self) -> Pos {
+        match self {
+            Direction::Down(x) => *x,
+            Direction::Right(x) => *x,
+            Direction::Left(x) => *x,
+            Direction::Up(x) => *x,
+        }
+    }
+}
+
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub struct Pos {
     pub x: usize,
@@ -85,23 +96,28 @@ impl Pos {
 
         false
     }
+
+    pub fn make_connection(&self, neighbor: &Direction, nodes: &mut [Vec<Node>]) {
+        match neighbor {
+            Direction::Left(_) => nodes[self.x][self.y].left = false,
+            Direction::Right(next_pos) => nodes[next_pos.x][next_pos.y].left = false,
+            Direction::Up(_) => nodes[self.x][self.y].up = false,
+            Direction::Down(next_pos) => nodes[next_pos.x][next_pos.y].up = false,
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug)]
 pub struct Node {
     pub up: bool,
-    pub down: bool,
     pub left: bool,
-    pub right: bool,
 }
 
 impl Node {
     pub fn new() -> Self {
         Self {
             up: true,
-            down: true,
             left: true,
-            right: true,
         }
     }
 }

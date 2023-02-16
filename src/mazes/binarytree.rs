@@ -21,7 +21,7 @@ impl Maze for BinaryTree {
     }
 
     fn reset(&mut self) {
-        self.nodes = vec![];
+        self.nodes.clear();
         for x in 0..GRID_WIDTH {
             self.nodes.push(vec![]);
             for _y in 0..GRID_HEIGHT {
@@ -37,17 +37,13 @@ impl Maze for BinaryTree {
             if self.current_pos.x > 0 && self.current_pos.y > 0 {
                 if random() {
                     self.nodes[self.current_pos.x][self.current_pos.y].up = false;
-                    self.nodes[self.current_pos.x][self.current_pos.y - 1].down = false;
                 } else {
                     self.nodes[self.current_pos.x][self.current_pos.y].left = false;
-                    self.nodes[self.current_pos.x - 1][self.current_pos.y].right = false;
                 }
             } else if self.current_pos.x > 0 {
                 self.nodes[self.current_pos.x][self.current_pos.y].left = false;
-                self.nodes[self.current_pos.x - 1][self.current_pos.y].right = false;
             } else if self.current_pos.y > 0 {
                 self.nodes[self.current_pos.x][self.current_pos.y].up = false;
-                self.nodes[self.current_pos.x][self.current_pos.y - 1].down = false;
             }
 
             self.current_pos.x += 1;

@@ -14,29 +14,8 @@ pub struct HuntAndKill {
 }
 
 impl HuntAndKill {
-    fn handle_neighbor(&mut self, pos: Pos, neighbor: Direction) {
-        let next_pos = match neighbor {
-            Direction::Left(next_pos) => {
-                self.nodes[pos.x][pos.y].left = false;
-                self.nodes[next_pos.x][next_pos.y].right = false;
-                next_pos
-            }
-            Direction::Right(next_pos) => {
-                self.nodes[pos.x][pos.y].right = false;
-                self.nodes[next_pos.x][next_pos.y].left = false;
-                next_pos
-            }
-            Direction::Up(next_pos) => {
-                self.nodes[pos.x][pos.y].up = false;
-                self.nodes[next_pos.x][next_pos.y].down = false;
-                next_pos
-            }
-            Direction::Down(next_pos) => {
-                self.nodes[pos.x][pos.y].down = false;
-                self.nodes[next_pos.x][next_pos.y].up = false;
-                next_pos
-            }
-        };
+    fn handle_neighbor(&mut self, neighbor: Direction) {
+        let next_pos = neighbor.get_pos();
 
         self.visited.insert(next_pos);
 
@@ -60,7 +39,7 @@ impl Maze for HuntAndKill {
     }
 
     fn reset(&mut self) {
-        self.nodes = vec![];
+        self.nodes.clear();
         for x in 0..GRID_WIDTH {
             self.nodes.push(vec![]);
             for _y in 0..GRID_HEIGHT {
@@ -69,8 +48,10 @@ impl Maze for HuntAndKill {
         }
 
         let pos = Pos::new(0, 0);
-        self.visited = HashSet::new();
+
+        self.visited.clear();
         self.visited.insert(pos);
+
         self.hunting_pos = pos;
         self.killing_pos = pos;
 
@@ -94,7 +75,8 @@ impl Maze for HuntAndKill {
             } else {
                 let neighbor = self.killing_pos.get_random_neighbor(&self.visited);
                 if let Some(neighbor) = neighbor {
-                    self.handle_neighbor(self.killing_pos, neighbor);
+                    self.killing_pos.make_connection(&neighbor, &mut self.nodes);
+                    self.handle_neighbor(neighbor);
                 } else {
                     self.hunting = true;
                 }

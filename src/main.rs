@@ -21,6 +21,7 @@ pub enum Algorithm {
     BinaryTree,
     HuntAndKill,
     Prim,
+    Kruskal,
 }
 
 impl Algorithm {
@@ -29,7 +30,8 @@ impl Algorithm {
             Algorithm::DepthFirstSearch => Algorithm::BinaryTree,
             Algorithm::BinaryTree => Algorithm::HuntAndKill,
             Algorithm::HuntAndKill => Algorithm::Prim,
-            Algorithm::Prim => Algorithm::DepthFirstSearch,
+            Algorithm::Prim => Algorithm::Kruskal,
+            Algorithm::Kruskal => Algorithm::DepthFirstSearch,
         }
     }
 }
@@ -39,13 +41,15 @@ fn main() {
     let mut binary = BinaryTree::new();
     let mut hunt = HuntAndKill::new();
     let mut prim = Prim::new();
+    let mut kruskal = Kruskal::new();
 
     depth.reset();
     binary.reset();
     hunt.reset();
     prim.reset();
+    kruskal.reset();
 
-    let mut current = Algorithm::Prim;
+    let mut current = Algorithm::Kruskal;
 
     let (mut rl, thread) = raylib::init()
         .size(
@@ -60,17 +64,12 @@ fn main() {
     while !rl.window_should_close() {
         match current {
             Algorithm::DepthFirstSearch => {
-                depth.update(&mut now, &mut current, &mut rl, &thread, 110);
+                depth.update(&mut now, &mut current, &mut rl, &thread, 110)
             }
-            Algorithm::BinaryTree => {
-                binary.update(&mut now, &mut current, &mut rl, &thread, 25);
-            }
-            Algorithm::HuntAndKill => {
-                hunt.update(&mut now, &mut current, &mut rl, &thread, 50);
-            }
-            Algorithm::Prim => {
-                prim.update(&mut now, &mut current, &mut rl, &thread, 30);
-            }
+            Algorithm::BinaryTree => binary.update(&mut now, &mut current, &mut rl, &thread, 25),
+            Algorithm::HuntAndKill => hunt.update(&mut now, &mut current, &mut rl, &thread, 50),
+            Algorithm::Prim => prim.update(&mut now, &mut current, &mut rl, &thread, 30),
+            Algorithm::Kruskal => kruskal.update(&mut now, &mut current, &mut rl, &thread, 100),
         }
     }
 }

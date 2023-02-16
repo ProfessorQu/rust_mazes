@@ -14,28 +14,7 @@ pub struct Prim {
 
 impl Prim {
     fn handle_neighbor(&mut self, pos: Pos, neighbor: Direction) {
-        let next_pos = match neighbor {
-            Direction::Left(next_pos) => {
-                self.nodes[pos.x][pos.y].left = false;
-                self.nodes[next_pos.x][next_pos.y].right = false;
-                next_pos
-            }
-            Direction::Right(next_pos) => {
-                self.nodes[pos.x][pos.y].right = false;
-                self.nodes[next_pos.x][next_pos.y].left = false;
-                next_pos
-            }
-            Direction::Up(next_pos) => {
-                self.nodes[pos.x][pos.y].up = false;
-                self.nodes[next_pos.x][next_pos.y].down = false;
-                next_pos
-            }
-            Direction::Down(next_pos) => {
-                self.nodes[pos.x][pos.y].down = false;
-                self.nodes[next_pos.x][next_pos.y].up = false;
-                next_pos
-            }
-        };
+        let next_pos = neighbor.get_pos();
 
         self.visited.insert(next_pos);
         if next_pos.has_neighbors(&self.visited) {
@@ -62,7 +41,7 @@ impl Maze for Prim {
     }
 
     fn reset(&mut self) {
-        self.nodes = vec![];
+        self.nodes.clear();
         for x in 0..GRID_WIDTH {
             self.nodes.push(vec![]);
             for _y in 0..GRID_HEIGHT {
@@ -70,8 +49,8 @@ impl Maze for Prim {
             }
         }
 
-        self.visited = HashSet::new();
-        self.edges = HashSet::new();
+        self.visited.clear();
+        self.edges.clear();
 
         let start_x = thread_rng().gen_range(0..GRID_WIDTH);
         let start_y = thread_rng().gen_range(0..GRID_HEIGHT);
@@ -85,6 +64,7 @@ impl Maze for Prim {
         if let Some(pos) = self.edges.clone().iter().choose(&mut thread_rng()) {
             let neighbor = pos.get_random_neighbor(&self.visited);
             if let Some(neighbor) = neighbor {
+                pos.make_connection(&neighbor, &mut self.nodes);
                 self.handle_neighbor(*pos, neighbor);
             } else {
                 self.edges.remove(pos);
