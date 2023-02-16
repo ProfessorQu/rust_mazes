@@ -23,7 +23,7 @@ impl Pos {
         Self { x, y }
     }
 
-    pub fn get_random_neighbor(&self, visited: &HashSet<Pos>) -> Option<Direction> {
+    pub fn neighbors(&self, visited: &HashSet<Pos>) -> Vec<Direction> {
         let mut neighbors = vec![];
         if self.x > 0 {
             let new_pos = Pos::new(self.x - 1, self.y);
@@ -50,7 +50,40 @@ impl Pos {
             }
         }
 
-        neighbors.choose(&mut thread_rng()).copied()
+        neighbors
+    }
+
+    pub fn get_random_neighbor(&self, visited: &HashSet<Pos>) -> Option<Direction> {
+        self.neighbors(visited).choose(&mut thread_rng()).copied()
+    }
+
+    pub fn has_neighbors(&self, visited: &HashSet<Pos>) -> bool {
+        if self.x > 0 {
+            let new_pos = Pos::new(self.x - 1, self.y);
+            if !visited.contains(&new_pos) {
+                return true;
+            }
+        }
+        if self.x < GRID_WIDTH - 1 {
+            let new_pos = Pos::new(self.x + 1, self.y);
+            if !visited.contains(&new_pos) {
+                return true;
+            }
+        }
+        if self.y > 0 {
+            let new_pos = Pos::new(self.x, self.y - 1);
+            if !visited.contains(&new_pos) {
+                return true;
+            }
+        }
+        if self.y < GRID_HEIGHT - 1 {
+            let new_pos = Pos::new(self.x, self.y + 1);
+            if !visited.contains(&new_pos) {
+                return true;
+            }
+        }
+
+        false
     }
 }
 
