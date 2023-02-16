@@ -119,13 +119,31 @@ impl Maze for HuntAndKill {
                     {
                         d.draw_rectangle(screen_x, screen_y, NODE_SIZE_I, NODE_SIZE_I, Color::GOLD);
                     } else {
-                        d.draw_rectangle(screen_x, screen_y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
+                        d.draw_rectangle(
+                            screen_x,
+                            screen_y,
+                            NODE_SIZE_I,
+                            NODE_SIZE_I,
+                            Color::WHITE,
+                        );
                     }
                     if node.up {
-                        d.draw_line(screen_x, screen_y, screen_x + NODE_SIZE_I, screen_y, Color::BLACK);
+                        d.draw_line(
+                            screen_x,
+                            screen_y,
+                            screen_x + NODE_SIZE_I,
+                            screen_y,
+                            Color::BLACK,
+                        );
                     }
                     if node.left {
-                        d.draw_line(screen_x, screen_y, screen_x, screen_y + NODE_SIZE_I, Color::BLACK);
+                        d.draw_line(
+                            screen_x,
+                            screen_y,
+                            screen_x,
+                            screen_y + NODE_SIZE_I,
+                            Color::BLACK,
+                        );
                     }
                 }
             }
