@@ -5,7 +5,7 @@ use raylib::prelude::*;
 
 use crate::{helpers::*, maze::Maze, GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
 
-const LAST_POSSES_LEN: usize = 10000;
+const LAST_POSSES_LEN: usize = 5000;
 
 #[derive(Clone)]
 pub struct AldousBroder {
@@ -104,18 +104,13 @@ impl Maze for AldousBroder {
         }
 
         if !self.complete() {
-            for (i, pos) in self.last_posses.iter().enumerate() {
-                let mut color = Color::LIGHTGRAY;
-                color.r *= i as u8 / LAST_POSSES_LEN as u8;
-                color.g *= i as u8 / LAST_POSSES_LEN as u8;
-                color.b *= i as u8 / LAST_POSSES_LEN as u8;
-
+            for pos in &self.last_posses {
                 d.draw_rectangle(
                     pos.x as i32 * NODE_SIZE_I,
                     pos.y as i32 * NODE_SIZE_I,
                     NODE_SIZE_I,
                     NODE_SIZE_I,
-                    color,
+                    Color::SKYBLUE,
                 );
             }
         }

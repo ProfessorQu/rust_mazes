@@ -53,7 +53,7 @@ fn main() {
     kruskal.reset();
     aldous.reset();
 
-    let mut current = Algorithm::Kruskal;
+    let mut current = Algorithm::AldousBroder;
 
     let (mut rl, thread) = raylib::init()
         .size(
