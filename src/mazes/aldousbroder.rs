@@ -64,6 +64,8 @@ impl Maze for AldousBroder {
                 self.last_posses.insert(0, neighbor_pos);
                 self.last_posses.truncate(LAST_POSSES_LEN);
             }
+        } else {
+            self.last_posses.clear();
         }
     }
 

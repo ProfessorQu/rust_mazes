@@ -141,17 +141,7 @@ impl Maze for Kruskal {
                 let screen_y = y as i32 * NODE_SIZE_I;
 
                 if self.visited.contains(&pos) {
-                    if self.last_posses.contains(&pos) {
-                        d.draw_rectangle(screen_x, screen_y, NODE_SIZE_I, NODE_SIZE_I, Color::RED);
-                    } else {
-                        d.draw_rectangle(
-                            screen_x,
-                            screen_y,
-                            NODE_SIZE_I,
-                            NODE_SIZE_I,
-                            Color::WHITE,
-                        );
-                    }
+                    d.draw_rectangle(screen_x, screen_y, NODE_SIZE_I, NODE_SIZE_I, Color::WHITE);
 
                     if node.up {
                         d.draw_line(
@@ -172,6 +162,18 @@ impl Maze for Kruskal {
                         );
                     }
                 }
+            }
+        }
+
+        if !self.complete() {
+            for pos in &self.last_posses {
+                d.draw_rectangle(
+                    pos.x as i32 * NODE_SIZE_I,
+                    pos.y as i32 * NODE_SIZE_I,
+                    NODE_SIZE_I,
+                    NODE_SIZE_I,
+                    Color::RED,
+                );
             }
         }
     }

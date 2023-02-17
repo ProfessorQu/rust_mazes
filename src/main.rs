@@ -9,6 +9,7 @@ use std::time::Instant;
 
 use maze::Maze;
 use mazes::*;
+use rand::{distributions::Standard, prelude::Distribution};
 
 pub const NODE_SIZE: usize = 10;
 pub const NODE_SIZE_I: i32 = NODE_SIZE as i32;
@@ -38,6 +39,19 @@ impl Algorithm {
     }
 }
 
+impl Distribution<Algorithm> for Standard {
+    fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> Algorithm {
+        match rng.gen_range(0..6) {
+            0 => Algorithm::DepthFirstSearch,
+            1 => Algorithm::BinaryTree,
+            2 => Algorithm::HuntAndKill,
+            3 => Algorithm::Prim,
+            4 => Algorithm::Kruskal,
+            _ => Algorithm::AldousBroder,
+        }
+    }
+}
+
 fn main() {
     let mut depth = DepthFirstSearch::new();
     let mut binary = BinaryTree::new();
@@ -53,7 +67,7 @@ fn main() {
     kruskal.reset();
     aldous.reset();
 
-    let mut current = Algorithm::AldousBroder;
+    let mut current = rand::random();
 
     let (mut rl, thread) = raylib::init()
         .size(
