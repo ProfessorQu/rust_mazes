@@ -22,6 +22,7 @@ pub enum Algorithm {
     HuntAndKill,
     Prim,
     Kruskal,
+    AldousBroder,
 }
 
 impl Algorithm {
@@ -31,7 +32,8 @@ impl Algorithm {
             Algorithm::BinaryTree => Algorithm::HuntAndKill,
             Algorithm::HuntAndKill => Algorithm::Prim,
             Algorithm::Prim => Algorithm::Kruskal,
-            Algorithm::Kruskal => Algorithm::DepthFirstSearch,
+            Algorithm::Kruskal => Algorithm::AldousBroder,
+            Algorithm::AldousBroder => Algorithm::DepthFirstSearch,
         }
     }
 }
@@ -42,12 +44,14 @@ fn main() {
     let mut hunt = HuntAndKill::new();
     let mut prim = Prim::new();
     let mut kruskal = Kruskal::new();
+    let mut aldous = AldousBroder::new();
 
     depth.reset();
     binary.reset();
     hunt.reset();
     prim.reset();
     kruskal.reset();
+    aldous.reset();
 
     let mut current = Algorithm::Kruskal;
 
@@ -70,6 +74,9 @@ fn main() {
             Algorithm::HuntAndKill => hunt.update(&mut now, &mut current, &mut rl, &thread, 50),
             Algorithm::Prim => prim.update(&mut now, &mut current, &mut rl, &thread, 30),
             Algorithm::Kruskal => kruskal.update(&mut now, &mut current, &mut rl, &thread, 120),
+            Algorithm::AldousBroder => {
+                aldous.update(&mut now, &mut current, &mut rl, &thread, 2000)
+            }
         }
     }
 }

@@ -7,26 +7,9 @@ use crate::{helpers::*, maze::Maze, GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
 
 const LAST_POSSES_LEN: usize = 1100;
 
-#[derive(Clone, Copy, Debug)]
-pub struct Node {
-    pub up: bool,
-    pub left: bool,
-    pub set: i32,
-}
-
-impl Node {
-    pub fn new(set: i32) -> Self {
-        Self {
-            up: true,
-            left: true,
-            set,
-        }
-    }
-}
-
 #[derive(Clone)]
 pub struct Kruskal {
-    nodes: Vec<Vec<Node>>,
+    nodes: Vec<Vec<KruskalNode>>,
     visited: HashSet<Pos>,
     unvisited: Vec<Pos>,
     all: Vec<Pos>,
@@ -115,7 +98,7 @@ impl Maze for Kruskal {
         for x in 0..GRID_WIDTH {
             self.nodes.push(vec![]);
             for _y in 0..GRID_HEIGHT {
-                self.nodes[x].push(Node::new(set));
+                self.nodes[x].push(KruskalNode::new(set));
                 set += 1;
             }
         }

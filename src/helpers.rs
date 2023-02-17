@@ -121,3 +121,20 @@ impl Node {
         }
     }
 }
+
+#[derive(Clone, Copy, Debug)]
+pub struct KruskalNode {
+    pub up: bool,
+    pub left: bool,
+    pub set: i32,
+}
+
+impl KruskalNode {
+    pub fn new(set: i32) -> Self {
+        Self {
+            up: true,
+            left: true,
+            set,
+        }
+    }
+}
