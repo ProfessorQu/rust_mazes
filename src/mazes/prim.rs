@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use rand::{seq::IteratorRandom, thread_rng, Rng};
+use rand::{seq::IteratorRandom, thread_rng};
 use raylib::prelude::*;
 
 use crate::{helpers::*, maze::Maze, GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
@@ -17,11 +17,11 @@ impl Prim {
         let next_pos = neighbor.get_pos();
 
         self.visited.insert(next_pos);
-        if next_pos.has_neighbors(&self.visited) {
+        if next_pos.has_neighbors_in(&self.visited) {
             self.edges.insert(next_pos);
         }
 
-        if !pos.has_neighbors(&self.visited) {
+        if !pos.has_neighbors_in(&self.visited) {
             self.edges.remove(&pos);
         }
     }
@@ -52,9 +52,7 @@ impl Maze for Prim {
         self.visited.clear();
         self.edges.clear();
 
-        let start_x = thread_rng().gen_range(0..GRID_WIDTH);
-        let start_y = thread_rng().gen_range(0..GRID_HEIGHT);
-        let start_pos = Pos::new(start_x, start_y);
+        let start_pos = rand::random();
 
         self.visited.insert(start_pos);
         self.edges.insert(start_pos);
@@ -62,7 +60,7 @@ impl Maze for Prim {
 
     fn generate(&mut self) {
         if let Some(pos) = self.edges.clone().iter().choose(&mut thread_rng()) {
-            let neighbor = pos.get_random_neighbor(&self.visited);
+            let neighbor = pos.get_random_neighbor_not_in(&self.visited);
             if let Some(neighbor) = neighbor {
                 pos.make_connection(&neighbor, &mut self.nodes);
                 self.handle_neighbor(*pos, neighbor);

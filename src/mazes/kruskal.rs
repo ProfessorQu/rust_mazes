@@ -19,7 +19,7 @@ pub struct Kruskal {
 
 impl Kruskal {
     fn handle_position(&mut self, pos: Pos) {
-        let neighbor = pos.get_random_neighbor(&HashSet::new());
+        let neighbor = pos.get_random_neighbor_not_in(&HashSet::new());
         if let Some(neighbor) = neighbor {
             let neighbor_pos = neighbor.get_pos();
 

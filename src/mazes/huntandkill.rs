@@ -61,7 +61,7 @@ impl Maze for HuntAndKill {
     fn generate(&mut self) {
         if !self.complete() {
             if self.hunting {
-                let neighbor = self.hunting_pos.get_random_neighbor(&self.visited);
+                let neighbor = self.hunting_pos.get_random_neighbor_not_in(&self.visited);
                 if neighbor.is_some() {
                     self.killing_pos = self.hunting_pos;
                     self.hunting = false;
@@ -73,7 +73,7 @@ impl Maze for HuntAndKill {
                     }
                 }
             } else {
-                let neighbor = self.killing_pos.get_random_neighbor(&self.visited);
+                let neighbor = self.killing_pos.get_random_neighbor_not_in(&self.visited);
                 if let Some(neighbor) = neighbor {
                     self.killing_pos.make_connection(&neighbor, &mut self.nodes);
                     self.handle_neighbor(neighbor);

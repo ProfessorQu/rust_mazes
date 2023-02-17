@@ -1,6 +1,5 @@
 use std::collections::HashSet;
 
-use rand::{thread_rng, Rng};
 use raylib::prelude::*;
 
 use crate::{helpers::*, maze::Maze, GRID_HEIGHT, GRID_WIDTH, NODE_SIZE_I};
@@ -48,9 +47,7 @@ impl Maze for DepthFirstSearch {
         self.stack.clear();
         self.visited.clear();
 
-        let start_x = thread_rng().gen_range(0..GRID_WIDTH);
-        let start_y = thread_rng().gen_range(0..GRID_HEIGHT);
-        let start_pos = Pos::new(start_x, start_y);
+        let start_pos = rand::random();
 
         self.stack.push(start_pos);
         self.visited.insert(start_pos);
@@ -58,7 +55,7 @@ impl Maze for DepthFirstSearch {
 
     fn generate(&mut self) {
         if let Some(pos) = self.stack.pop() {
-            let neighbor = pos.get_random_neighbor(&self.visited);
+            let neighbor = pos.get_random_neighbor_not_in(&self.visited);
             if let Some(neighbor) = neighbor {
                 pos.make_connection(&neighbor, &mut self.nodes);
                 self.handle_neighbor(pos, neighbor);
