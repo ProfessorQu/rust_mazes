@@ -15,6 +15,7 @@ pub trait Maze {
     fn reset(&mut self);
     fn generate(&mut self);
     fn draw(&self, d: &mut RaylibDrawHandle);
+
     fn update(
         &mut self,
         now: &mut Instant,
